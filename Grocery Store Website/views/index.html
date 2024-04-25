@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles for the search bar */
+        .search-container {
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 55px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .search-button {
+            height: 55px;
+            padding: 12px 20px;
+            margin-left: 10px;
+            background-color: #368067;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #2d6c58;
+        }
+
+        /* Suggestions dropdown */
+        #suggestions-list {
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="search-container"
+            style="background-color: aqua; justify-content: center; align-items: center; display: flex; flex-direction: column; height: auto;">
+            <div>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search for products...">
+                <button type="button" id="searchButton" class="search-button">Search</button>
+            </div>
+            <div id="suggestions-list" class="d-none"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and custom JS (for search functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Papa Parse library for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const suggestionsList = document.getElementById('suggestions-list');
+            const searchButton = document.getElementById('searchButton');
+            let productsData = []; // Array to store products data from CSV
+
+            // Fetch and parse CSV data using Papa Parse library
+            Papa.parse('../public/js/products.csv', {
+                download: true,
+                header: true,
+                complete: function (results) {
+                    productsData = results.data; // Store CSV data in productsData array
+                }
+            });
+
+            // Function to filter products based on search term
+            function filterProducts(searchTerm) {
+                if (!searchTerm.trim() || !productsData || !Array.isArray(productsData)) {
+                    return []; // Return empty array if search term is empty or products data is invalid
+                }
+
+                const filteredProducts = productsData.filter(product => {
+                    // Check if product object and product name (product.product) are valid
+                    if (product && product.product && typeof product.product === 'string') {
+                        // Use toLowerCase() safely after verifying that product.product is a string
+                        return product.product.toLowerCase().includes(searchTerm.toLowerCase());
+                    }
+                    return false; // Filter out invalid product objects or names
+                });
+
+                return filteredProducts;
+            }
+
+
+            // Function to display suggestions based on filtered products
+            function displaySuggestions(suggestions) {
+                suggestionsList.innerHTML = ''; // Clear previous suggestions
+                if (suggestions.length === 0) {
+                    suggestionsList.classList.add('d-none'); // Hide suggestions if no results
+                } else {
+                    suggestionsList.classList.remove('d-none'); // Show suggestions
+                    suggestions.forEach(suggestion => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = suggestion.product;
+                        suggestionItem.addEventListener('click', function () {
+                            searchInput.value = suggestion.product; // Set input value on suggestion click
+                            suggestionsList.classList.add('d-none'); // Hide suggestions on click
+                        });
+                        suggestionsList.appendChild(suggestionItem);
+                    });
+                }
+            }
+
+            // Event listener for input change
+            searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.trim();
+                const filteredProducts = filterProducts(searchTerm);
+                displaySuggestions(filteredProducts);
+            });
+
+            // Event listener for search button click
+            searchButton.addEventListener('click', function () {
+                const searchTerm = searchInput.value.trim();
+                const filteredProducts = filterProducts(searchTerm);
+                // Perform action (e.g., search, display results) based on filtered products
+                console.log(filteredProducts);
+            });
+
+            // Hide suggestions on outside click
+            // document.addEventListener('click', function (event) {
+            //     if (!event.target.closest('.search-container')) {
+            //         suggestionsList.classList.add('d-none');
+            //     }
+            // });
+        });
+    </script>
+</body>
+
+</html>
