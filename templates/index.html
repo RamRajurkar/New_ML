@@ -12,7 +12,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .box {
+            z-index: -1;
+        }
 
+        .swiper-slide {
+            z-index: -1;
+
+        }
+
+        .slide {
+            z-index: -1;
+
+        }
+
+        .user-info {
+            z-index: -1;
+
+        }
+    </style>
 </head>
 <body>
     
@@ -84,18 +103,13 @@
         <!-- login -->
 
         <form action="" class="login-form">
-
-            <h3>login form</h3>
-
-            <input type="email" placeholder="enter your email" name="email" class="box">
-            <input type="password" placeholder="enter your password" name="password" class="box">
-
-            <div class="remember">
-                <input type="checkbox" name="" id="remember-me">
-                <label for="remember-me">remember me</label>
+            <div style="width: 100%; display: flex; justify-content: space-around;">
+                <a href="/login?type=login"
+                    style="color:  white; border: none; border-radius: 8px; height: 40px; width: 140px; background-color: rgb(127, 215, 186); display: flex; justify-content: center; align-items: center; font-size: 15px;">Sign Up</a>
+                <a href="/signup?type=signin"
+                    style="color:  white; border: none; border-radius: 8px; height: 40px; width: 140px; background-color: rgb(127, 215, 186); display: flex; justify-content: center; align-items: center; font-size: 15px;">Log
+                    in</a>
             </div>
-            <a href="#" class="btn"> login </a>
-
         </form>
 
     </header>
@@ -117,35 +131,64 @@
 
     <!-- banner -->
 
-    <section class="banner-container">
-
+    <section class="banner-container" style="display: flex;"> 
         <div class="banner">
-            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="" style="filter: blur(1px); backdrop-filter: 5px;">
             <div class="content">
                 <span>limited sales</span>
-                <h3>Vegetables</h3>
-                <a href="#" class="btn">shop now</a>
+                <h3 style="background-color: rgba(154, 206, 188, 0.671); padding: 10px; border-radius: 10px;">Food & Beverages</h3>
+                <form action="/home_recommendation" method="POST">
+                    <input type="hidden" name="category" value="food_and_beverages1">
+                    <button type="submit" class="btn">shop now</button>
+                </form>
+            </div>
+        </div>
+        <div class="banner">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="" style="filter: blur(1px); backdrop-filter: 5px;">
+            <div class="content">
+                <span>limited sales</span>
+                <h3 style="background-color: rgba(154, 206, 188, 0.671); padding: 10px; border-radius: 10px;">Bakery, Cakes & Dairy</h3>
+                <form action="/home_recommendation" method="POST">
+                    <input type="hidden" name="category" value="food_and_beverages2">
+                    <button type="submit" class="btn">shop now</button>
+                </form>
+            </div>
+        </div>
+        <div class="banner">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="" style="filter: blur(1px); backdrop-filter: 5px;">
+            <div class="content">
+                <span>limited sales</span>
+                <h3 style="background-color: rgba(154, 206, 188, 0.671); padding: 10px; border-radius: 10px;">Household & Cleaning</h3>
+                <form action="/home_recommendation" method="POST">
+                    <input type="hidden" name="category" value="household_and_cleaning">
+                    <button type="submit" class="btn">shop now</button>
+                </form>
+            </div>
+        </div>
+        <div class="banner">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="" style="filter: blur(1px); backdrop-filter: 5px;">
+            <div class="content">
+                <span>limited sales</span>
+                <h3 style="background-color: rgba(154, 206, 188, 0.671); padding: 10px; border-radius: 10px;">Personal Care & Babycare</h3>
+                <form action="/home_recommendation" method="POST">
+                    <input type="hidden" name="category" value="personal_care_and_babycare">
+                    <button type="submit" class="btn">shop now</button>
+                </form> 
+           </div>
+        </div>
+        <div class="banner">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="" style="filter: blur(1px); backdrop-filter: 5px;">
+            <div class="content">
+                <span>limited sales</span>
+                <h3 style="background-color: rgba(154, 206, 188, 0.671); padding: 10px; border-radius: 10px;">Daily Needs</h3>
+                <form action="/home_recommendation" method="POST">
+                    <input type="hidden" name="category" value="daily_needs">
+                    <button type="submit" class="btn">shop now</button>
+                </form>
             </div>
         </div>
 
-        <div class="banner">
-            <img src="{{ url_for('static', filename='images/banner2.png') }}" alt="">
-            <div class="content">
-                <span>limited sales</span>
-                <h3>fruits</h3>
-                <a href="#" class="btn">shop now</a>
-            </div>
-        </div>
-
-        <div class="banner">
-            <img src="{{ url_for('static', filename='images/banner3.png') }}" alt="">
-            <div class="content">
-                <span>limited sales</span>
-                <h3>assorted</h3>
-                <a href="#" class="btn">shop now</a>
-            </div>
-        </div>
-
+        
     </section>
 
 
@@ -158,26 +201,30 @@
         <h1 class="heading"> our <span>products</span></h1>
         <div class="box-container">
             {% for product in products %}
-            <div class="box">
-                <div class="image">
-                    <img src="{{ url_for('static', filename='images/product-1.jpg') }}" alt="">
-                </div>
-                <div class="content">
-                    <h3>{{ product['product'] }}</h3>
-                    <div class="price">{{product['price']}}</div><br>
-                    <div class="price">{{product['rating']}}</div>
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+            <a href="/display_products?name={{ product['product'] }}&desc={{ product['description'] }}">
+
+                <div class="box">
+                    <div class="image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfk9W7jWejAg1GASGKhUy0mqM9PIvhgoYTzA&s" alt="Product Image">
                     </div>
-                    <i class="fas fa-shopping-cart"></i>
-                    <i class="fas fa-heart"></i>
-                    <i class="fas fa-eye"></i>
+                    <div class="content">
+                        <h3>{{ product['product'] }}</h3>
+                        <div class="price">{{ product['price'] }}</div><br>
+                        <div class="price">{{ product['rating'] }}</div>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-heart"></i>
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
-            </div>
+            </a>
+            
             {% endfor %}
         </div>
         
@@ -210,8 +257,8 @@
             <div class="content">
                 <h3>we make organic food in market</h3>
                 <div class="divider"></div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam aperiam rem cupiditate sequi porro assumenda tenetur rerum modi, pariatur enim quis officiis nesciunt et</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo totam aut voluptatum ipsa dolorum.</p>
+                <p>Welcome to [Your Grocery eCommerce Site], where convenience meets quality. We pride ourselves on offering a diverse selection of premium groceries to meet your everyday needs. From fresh produce to pantry staples, household essentials to personal care items, we've curated a collection that caters to your lifestyle. With our commitment to excellence and customer satisfaction, we strive to make your shopping experience seamless and enjoyable. Thank you for choosing us as your trusted online grocery destination.</p>
+                <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo totam aut voluptatum ipsa dolorum.</p> -->
                 <a href="#" class="btn">read more</a>
             </div>
 
@@ -493,18 +540,6 @@
         <div class="credit">created by <span> ninjashub </span> all rights reserved!</div>
 
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
